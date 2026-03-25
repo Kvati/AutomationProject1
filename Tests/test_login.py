@@ -33,13 +33,13 @@ def test_invalid_user_login(page: Page, users: dict):
     login_page = LoginPage(page)
     login_page.login(email = users["email"], password = users["password"])
 
-    expect(page.get_by_text("Your email or password is incorrect!"))
+    expect(page.get_by_text("Your email or password is incorrect!")).to_be_visible()
 
 def test_empty_values_login(page: Page):
     login_page = LoginPage(page)
     login_page.login(email = "", password = "")
 
-    expect(page.get_by_text("Your email or password is incorrect!"))
+    expect(page.get_by_text("Your email or password is incorrect!")).to_be_visible()
 
 def test_logout(page: Page, existing_user: dict):
     login_page = LoginPage(page)

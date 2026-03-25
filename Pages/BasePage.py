@@ -9,4 +9,4 @@ class BasePage:
         self.page.goto(url)
 
     def get_title(self):
-        return self.page.title
+        return self.page.title()

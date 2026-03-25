@@ -4,13 +4,8 @@ from Pages.BasePage import BasePage
 
 
 class RegisterPage(BasePage):
-    def __init__(self, page: Page, random_user: dict):
+    def __init__(self, page: Page):
         super().__init__(page)
-
-        self.navigate("https://automationexercise.com/signup")
-        self.page.get_by_placeholder("Name").fill(random_user["username"])
-        self.page.get_by_placeholder("Email Address").nth(1).fill(random_user["email"])
-        self.page.get_by_role("button", name = "SignUp").click()
 
         self.title_mr = page.get_by_role("radio", name = "Mr.")
         self.title_mrs = page.get_by_role("radio", name = "Mrs")

@@ -5,8 +5,6 @@ class LoginPage(BasePage):
 
     def __init__(self, page: Page):
         super().__init__(page)
-
-        self.navigate("https://automationexercise.com")
         self.logout_button = page.get_by_text("Logout")
 
         self.navigate("https://automationexercise.com/login")

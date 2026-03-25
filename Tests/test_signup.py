@@ -19,7 +19,7 @@ def test_already_existing_user(page: Page):
     signup_page = SignUpPage(page)
     signup_page.signup(username = "test", email = "test@test.com")
 
-    expect(page.get_by_text("Email Address already exists!")).to_be_visible()
+    expect(page.get_by_text("Email Address already exist!")).to_be_visible()
 
 def test_empty_name_and_email_signup(page: Page):
     signup_page = SignUpPage(page)
@@ -35,4 +35,12 @@ def test_only_empty_email_signup(page: Page):
 
     email_input = page.get_by_placeholder("Email Address").nth(1)
     is_invalid = email_input.evaluate("el => !el.validity.valid")
+    assert is_invalid
+
+def test_invalid_email_format(page: Page, random_user: dict):
+    signup_page = SignUpPage(page)
+    signup_page.signup(username = random_user["username"], email = random_user["email"].replace("@", ""))
+
+    email_input = page.get_by_placeholder("Email Address").nth(1)
+    is_invalid = email_input.evaluate("el => el.validity.typeMismatch")
     assert is_invalid

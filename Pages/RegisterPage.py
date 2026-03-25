@@ -1,11 +1,16 @@
 from playwright.sync_api import Page
-from BasePage import BasePage
+from Pages.BasePage import BasePage
+
+
 
 class RegisterPage(BasePage):
-    def __init__(self, page: Page):
+    def __init__(self, page: Page, random_user: dict):
         super().__init__(page)
 
         self.navigate("https://automationexercise.com/signup")
+        self.page.get_by_placeholder("Name").fill(random_user["username"])
+        self.page.get_by_placeholder("Email Address").nth(1).fill(random_user["email"])
+        self.page.get_by_role("button", name = "SignUp").click()
 
         self.title_mr = page.get_by_role("radio", name = "Mr.")
         self.title_mrs = page.get_by_role("radio", name = "Mrs")
@@ -18,13 +23,13 @@ class RegisterPage(BasePage):
         self.newsletter = page.locator("#newsletter")
         self.first_name = page.get_by_label("First Name")
         self.last_name = page.get_by_label("Last Name")
-        self.company = page.get_by_label("Company")
-        self.address_1 = page.get_by_label("Address")
+        self.company = page.get_by_label("Company", exact=True)
+        self.address_1 = page.get_by_label("Address * (Street address, P.O. Box, Company name, etc.)")
         self.address_2 = page.get_by_label("Address 2")
         self.country_select = page.locator("#country")
         self.state = page.get_by_label("State")
         self.city = page.get_by_label("City")
-        self.zipcode = page.get_by_label("Zip Code")
+        self.zipcode = page.locator("#zipcode")
         self.mobile_number = page.get_by_label("Mobile Number")
         self.create_account_button = page.get_by_role("button", name = "Create Account")
 
@@ -34,6 +39,7 @@ class RegisterPage(BasePage):
         self.dob_day_select.select_option(user_data["dob_day"])
         self.dob_month_select.select_option(user_data["dob_month"])
         self.dob_year_select.select_option(user_data["dob_year"])
+        self.newsletter.click()
         self.first_name.fill(user_data["first_name"])
         self.last_name.fill(user_data["last_name"])
         self.company.fill(user_data["company"])
@@ -42,7 +48,7 @@ class RegisterPage(BasePage):
         self.country_select.select_option(user_data["country"])
         self.state.fill(user_data["state"])
         self.city.fill(user_data["city"])
-        self.zipcode.fill(user_data["zip_code"])
+        self.zipcode.fill(user_data["zipcode"])
         self.mobile_number.fill(user_data["mobile_number"])
 
         self.create_account_button.click()

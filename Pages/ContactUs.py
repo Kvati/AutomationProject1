@@ -7,7 +7,7 @@ class ContactUsPage(BasePage):
         self.navigate("https://automationexercise.com/contact_us")
 
         self.name_field = page.get_by_placeholder("Name")
-        self.email_field = page.get_by_placeholder("Email")
+        self.email_field = page.get_by_placeholder("Email", exact=True)
         self.subject_field = page.get_by_placeholder("Subject")
         self.message_field = page.get_by_placeholder("Your Message Here")
         self.submit_button = page.get_by_role("button", name = "Submit")
@@ -16,10 +16,16 @@ class ContactUsPage(BasePage):
 
     def contact_us_fill(self, form_fill : dict, path: str):
 
-        self.name_field.fill(form_fill["Name"])
-        self.email_field.fill(form_fill["Email"])
-        self.subject_field.fill(form_fill["Subject"])
-        self.message_field.fill(form_fill["Message"])
+        self.name_field.fill(form_fill["name"])
+        self.email_field.fill(form_fill["email"])
+        self.subject_field.fill(form_fill["subject"])
+        self.message_field.fill(form_fill["message"])
         self.page.set_input_files("input[type='file']", path)
+        self.submit_button.click(force=True) #force click needed to bypass an ad overlay on automationexercise.com
 
-        self.submit_button.click()
+
+    def confirm_dialog(self):
+        self.page.on("dialog", lambda dialog: dialog.accept()) #type: ignore
+
+    def cancel_dialog(self):
+        self.page.on("dialog", lambda dialog: dialog.dismiss())  # type: ignore

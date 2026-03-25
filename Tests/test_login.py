@@ -39,7 +39,17 @@ def test_empty_values_login(page: Page):
     login_page = LoginPage(page)
     login_page.login(email = "", password = "")
 
-    expect(page.get_by_text("Your email or password is incorrect!")).to_be_visible()
+    email_input = page.get_by_placeholder("Email Address").nth(0)
+    is_invalid = email_input.evaluate("el => !el.validity.valid")
+    assert is_invalid
+
+def test_empty_password_login(page: Page):
+    login_page = LoginPage(page)
+    login_page.login(email = "test@test.com", password = "")
+
+    password_input = page.get_by_placeholder("Password")
+    is_invalid = password_input.evaluate("el => !el.validity.valid")
+    assert is_invalid
 
 def test_logout(page: Page, existing_user: dict):
     login_page = LoginPage(page)

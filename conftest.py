@@ -6,7 +6,30 @@ from playwright.sync_api import Page
 from Pages.RegisterPage import RegisterPage
 from Pages.SignupPage import SignUpPage
 from Pages.BasePage import BasePage
+import allure
 
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+
+    if report.when == "call" and report.failed:
+        page = item.funcargs.get("page", None)
+
+        if page is None:
+            for fixture_name in item.funcargs:
+                fixture_value = item.funcargs[fixture_name]
+                if hasattr(fixture_value, "page"):
+                    page = fixture_value.page
+                    break
+
+        if page is not None:
+            screenshot = page.screenshot()
+            allure.attach(
+                screenshot,
+                name="screenshot_on_failure",
+                attachment_type=allure.attachment_type.PNG
+            )
 
 @pytest.fixture
 def login_page(page: Page):

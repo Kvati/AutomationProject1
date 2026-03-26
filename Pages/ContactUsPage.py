@@ -13,21 +13,20 @@ class ContactUsPage(BasePage):
 
 
     def navigate_to_contactus_page(self):
-        self.navigate("https://automationexercise.com/contact_us")
+        self.navigate("/contact_us")
 
 
-    def contact_us_fill(self, form_fill : dict, path: str):
+    def contact_us_fill(self, form_fill : dict, path: str, accept_dialog: bool = True):
 
         self.name_field.fill(form_fill["name"])
         self.email_field.fill(form_fill["email"])
         self.subject_field.fill(form_fill["subject"])
         self.message_field.fill(form_fill["message"])
         self.page.set_input_files("input[type='file']", path)
+
+        handler = lambda dialog: dialog.accept() if accept_dialog else dialog.dismiss()
+        self.page.once("dialog", handler)  # once() is safer than on()
+
         self.submit_button.click(force=True) #force click needed to bypass an ad overlay on automationexercise.com
 
 
-    def confirm_dialog(self):
-        self.page.on("dialog", lambda dialog: dialog.accept()) #type: ignore
-
-    def cancel_dialog(self):
-        self.page.on("dialog", lambda dialog: dialog.dismiss())  # type: ignore

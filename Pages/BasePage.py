@@ -17,8 +17,8 @@ class BasePage:
         self.page = page
 
     # --- Base Utilities ---
-    def navigate(self, url: str):
-        self.page.goto(url)
+    def navigate(self, path: str):
+        self.page.goto(path)
 
     def get_title(self) -> str:
         return self.page.title()

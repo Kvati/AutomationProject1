@@ -21,21 +21,19 @@ def test_contact_us_page(contact_page):
     }, id="only_email")
 ])
 def test_contact_us_form_confirm(contact_page, inputs: dict):
-    contact_page.confirm_dialog()
 
-    contact_page.contact_us_fill(inputs, "Utils/upload_test_file.txt")
+    contact_page.contact_us_fill(inputs, "Utils/upload_test_file.txt", accept_dialog = True)
 
     expect(contact_page.page.get_by_text("Success! Your details have been submitted successfully.").nth(0)).to_be_visible()
 
 def test_contact_us_form_cancel(contact_page):
-    contact_page.cancel_dialog()
 
     contact_page.contact_us_fill({
         "name": "JohnDoe123",
         "email": "testuser@test.com",
         "subject": "Test Subject",
         "message": "Test message"
-    }, "Utils/upload_test_file.txt")
+    }, "Utils/upload_test_file.txt", accept_dialog = False)
 
     expect(contact_page.page.get_by_text("Success! Your details have been submitted successfully.").nth(0)).not_to_be_visible()
 
@@ -60,9 +58,7 @@ def test_contact_us_form_cancel(contact_page):
     }, id="missing_email")
 ])
 def test_invalid_contact_us_form(contact_page, inputs: dict):
-    contact_page.confirm_dialog()
-
-    contact_page.contact_us_fill(inputs, "Utils/upload_test_file.txt")
+    contact_page.contact_us_fill(inputs, "Utils/upload_test_file.txt", accept_dialog = True)
 
     is_invalid = contact_page.email_field.evaluate("el => !el.validity.valid")
     assert is_invalid

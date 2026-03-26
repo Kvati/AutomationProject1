@@ -12,7 +12,7 @@ class SignUpPage(BasePage):
         self.signup_button = page.get_by_role("button", name="Signup")
 
     def navigate_to_signup_page(self):
-        self.navigate("https://automationexercise.com/login")
+        self.navigate("/login")
 
 
     def signup(self, username: str, email: str):

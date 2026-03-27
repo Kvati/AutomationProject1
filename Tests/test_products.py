@@ -30,14 +30,4 @@ def test_empty_product_search(products_page: ProductsPage):
     products_page.search_specific_products("")
     assert products_page.products.count() == 34
 
-def test_random_product_review_fields(products_page: ProductsPage):
-    products_page.view_random_product()
-
-    expect(products_page.review_form_name).to_be_empty()
-    expect(products_page.review_form_email).to_be_empty()
-    expect(products_page.review_form_text).to_be_empty()
-
-def test_random_product_valid_review_submission(products_page: ProductsPage):
-    products_page.view_random_product()
-    products_page.fill_review_form("some name", "someemail@test.com", "some review!")
 

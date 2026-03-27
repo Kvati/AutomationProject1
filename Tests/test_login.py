@@ -1,6 +1,5 @@
 import pytest
-from playwright.sync_api import Page, expect
-from Pages.LoginPage import LoginPage
+from playwright.sync_api import expect
 
 
 def test_page(login_page):

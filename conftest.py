@@ -1,13 +1,26 @@
 import pytest
 import uuid
 from Pages.ContactUsPage import ContactUsPage
+from Pages.HomePage import HomePage
 from Pages.LoginPage import LoginPage
 from playwright.sync_api import Page
+from Pages.ProductDetailsPage import ProductsDetailsPage
+from Pages.ProductsPage import ProductsPage
 from Pages.RegisterPage import RegisterPage
 from Pages.SignupPage import SignUpPage
 from Pages.BasePage import BasePage
 import allure
 
+
+@pytest.fixture(scope="session")
+def browser_context_args(browser_context_args):
+    return {
+        **browser_context_args,
+        "viewport": {
+            "width": 1920,
+            "height": 1080
+        }
+    }
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
@@ -61,9 +74,30 @@ def test_cases_page(page: Page):
     return base_page
 
 @pytest.fixture
+def home_page(page: Page):
+    home_page = HomePage(page)
+    home_page.navigate("/")
+    return home_page
+
+@pytest.fixture
+def products_page(page: Page):
+    products_page = ProductsPage(page)
+    products_page.navigate("/products")
+    return products_page
+
+@pytest.fixture
+def product_details_page(page: Page):
+    product_details_page = ProductsDetailsPage(page)
+    product_details_page.navigate("/products")
+    random_product_vars = product_details_page.view_random_product()
+    return product_details_page, random_product_vars
+
+
+@pytest.fixture
 def random_user():
     return {
         "username": "user_" + uuid.uuid4().hex[:6],
         "email": f"{uuid.uuid4().hex[:8]}@test.com",
     }
+
 

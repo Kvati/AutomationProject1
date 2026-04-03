@@ -2,7 +2,7 @@ from playwright.sync_api import Page
 from Pages.ProductsPage import ProductsPage
 
 
-class ProductsDetailsPage(ProductsPage):
+class ProductDetailsPage(ProductsPage):
 
     availability_statuses = ["In Stock", "Out of Stock"]
     condition_statuses = ["New", "Used"]
@@ -47,15 +47,15 @@ class ProductsDetailsPage(ProductsPage):
 
     @staticmethod
     def check_availability(status) -> bool:
-        return status in ProductsDetailsPage.availability_statuses
+        return status in ProductDetailsPage.availability_statuses
 
     @staticmethod
     def check_condition(status) -> bool:
-        return status in ProductsDetailsPage.condition_statuses
+        return status in ProductDetailsPage.condition_statuses
 
     @staticmethod
     def check_brand(status) -> bool:
-        return status in ProductsDetailsPage.brands
+        return status in ProductDetailsPage.brands
 
     def get_product_name(self) -> str:
         return self.product_name.text_content().strip()

@@ -70,6 +70,23 @@ def test_add_random_product_to_cart_continue_shopping(home_page):
 
     expect(home_page.page).to_have_url("https://automationexercise.com/")
 
+def test_successful_subscribe(home_page):
+    #by default the field is at the bottom of the page so we need to scroll it into view
+    home_page.subscribe_email_field.scroll_into_view_if_needed()
 
+    expect(home_page.subscribe_email_field).to_be_visible()
 
+    home_page.subscribe("SomeTest@test.com")
 
+    expect(home_page.subscribe_success).to_be_visible()
+
+def test_unsuccessful_subscribe(home_page):
+    # by default the field is at the bottom of the page so we need to scroll it into view
+    home_page.subscribe_email_field.scroll_into_view_if_needed()
+
+    expect(home_page.subscribe_email_field).to_be_visible()
+
+    home_page.subscribe("SomeTesttest.com")
+
+    is_invalid = home_page.subscribe_email_field.evaluate("el => !el.validity.valid")
+    assert is_invalid

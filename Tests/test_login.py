@@ -2,7 +2,7 @@ import pytest
 from playwright.sync_api import expect
 
 
-def test_page(login_page):
+def test_login_page_loads(login_page):
 
     expect(login_page.page).to_have_url("https://automationexercise.com/login")
     expect(login_page.page.get_by_text("Login to your account")).to_be_visible()

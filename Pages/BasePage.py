@@ -63,6 +63,10 @@ class BasePage:
         max_retries = 3
         for attempt in range(max_retries):
             try:
+                # clear any existing vignette before attempting
+                if "#google_vignette" in self.page.url:
+                    self.page.evaluate("window.location.hash = ''")
+                    self.page.wait_for_load_state("domcontentloaded")
                 action()
                 success_condition()
                 break

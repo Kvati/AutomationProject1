@@ -17,9 +17,13 @@ def test_chosen_product_data(product_details_page):
     assert product_page.check_condition(product_page.get_condition_status())
     assert product_page.check_brand(product_page.get_brand_name())
 
-def test_valid_add_to_cart(product_details_page):
+@pytest.mark.parametrize("qty",[
+    pytest.param("3", id = "3 items"),
+    pytest.param("5", id = "5 items"),
+    pytest.param("10", id = "10 items"),
+])
+def test_valid_add_to_cart(product_details_page, qty):
     product_page, product = product_details_page
-    qty = "3"
 
     product_name = product_page.product_name.text_content()
     product_price = int(product_page.product_price.text_content().replace("Rs. ", ""))
@@ -27,12 +31,13 @@ def test_valid_add_to_cart(product_details_page):
     product_page.add_to_cart_with_custom_quantity(qty)
 
     product_price_cart = int(product_page.product_price_cart.text_content().replace("Rs. ", ""))
-
+    product_qty = int(product_page.product_qty.text_content())
 
     product_name_cart = product_page.product_name_cart.text_content()
     product_price_single_cart = int(product_page.product_price_single_cart.text_content().replace("Rs. ", ""))
 
     expect(product_page.page).to_have_url("https://automationexercise.com/view_cart")
+    assert product_qty == int(qty)
 
     assert product_name == product_name_cart
     assert product_price == product_price_single_cart
@@ -53,23 +58,15 @@ def test_invalid_add_to_cart(product_details_page, qty):
     expect(product_page.page).not_to_have_url("https://automationexercise.com/view_cart")
     expect(product_page.page).not_to_have_url(re.compile(r".*500.*|.*error.*"))
 
-
+VALID_USER = {
+    "name": "JohnDoe",
+    "email": "test@test.com",
+    "review": "test"
+}
 @pytest.mark.parametrize("field, inputs", [
-    pytest.param("name",
-                 {"name": "",
-                  "email": "test@test.com",
-                  "review": "test"},
-                 id="name_empty"),
-    pytest.param("email",
-                 {"name": "JaneSmith",
-                  "email": "",
-                  "review": "test"},
-                 id="email_empty"),
-    pytest.param("review",
-                 {"name": "JohnDoe",
-                  "email": "test@test.com",
-                  "review": ""},
-                 id="review_empty"),
+    pytest.param("name", {**VALID_USER, "name": ""}, id="name_empty"),
+    pytest.param("email", {**VALID_USER, "email": ""}, id="email_empty"),
+    pytest.param("review", {**VALID_USER, "review": ""}, id="review_empty")
 ])
 def test_invalid_write_review(product_details_page, field, inputs):
     product_page, product = product_details_page

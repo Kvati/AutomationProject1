@@ -27,6 +27,8 @@ class RegisterPage(BasePage):
         self.zipcode = page.locator("#zipcode")
         self.mobile_number = page.get_by_label("Mobile Number")
         self.create_account_button = page.get_by_role("button", name = "Create Account")
+        self.continue_button = page.locator(".btn-primary")
+        self.account_delete_button = page.get_by_role("link", name = "Delete Account")
 
 
     def account_creation(self, user_data: dict):

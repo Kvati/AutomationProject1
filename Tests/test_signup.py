@@ -3,7 +3,7 @@ from Pages.SignupPage import SignUpPage
 from playwright.sync_api import Page, expect
 
 
-def test_page(signup_page):
+def test_signup_page_loads(signup_page):
     expect(signup_page.page).to_have_url("https://automationexercise.com/login")
     expect(signup_page.page.get_by_text("New User Signup!")).to_be_visible()
 

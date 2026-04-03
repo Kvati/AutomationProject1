@@ -4,6 +4,7 @@ import random
 import re
 
 
+
 class HomePage(BasePage):
 
     def __init__(self, page: Page):
@@ -36,11 +37,18 @@ class HomePage(BasePage):
         self.view_cart_button = page.get_by_role("link", name="View Cart")
         self.continue_shopping_button = page.get_by_role("button", name = "Continue Shopping")
 
+        self.subscribe_email_field = page.get_by_placeholder("Your email address")
+        self.subscribe_button = page.locator("#subscribe")
+        self.subscribe_success = page.locator(".alert-success")
+
+        self.empty_cart_text = page.get_by_text("Cart is empty!")
+        self.click_here_products_button = page.get_by_role("link", name="here")
+
     #amount of products on screen and view_product buttons differs,
     #due to a carousel of 6 duplicate items at the bottom of the page
     def add_random_product_to_cart(self):
         count = self.products.count()
-        random_index = random.randint(0,count-1)
+        random_index = random.randint(0, count - 1)
 
         product = self.products.nth(random_index)
 
@@ -49,12 +57,16 @@ class HomePage(BasePage):
 
         product.scroll_into_view_if_needed()
         product.hover()
-        product.get_by_text("Add to cart").click()
+
+        self.dismiss_vignette_and_retry(
+            action=lambda: product.get_by_text("Add to cart").click(),
+            success_condition=lambda: self.page.wait_for_selector(".modal-content", state="visible", timeout=5000)
+        )
 
         return {
-            "index" : random_index,
-            "name" : product_name,
-            "price" : product_price
+            "index": random_index,
+            "name": product_name,
+            "price": product_price
         }
 
     def view_random_product(self):
@@ -77,6 +89,7 @@ class HomePage(BasePage):
             "name": product_name,
             "price": product_price
         }
+
     def click_brand(self, brand: str):
         self.dismiss_vignette_and_retry(
             action=lambda: self.page.locator(
@@ -84,12 +97,12 @@ class HomePage(BasePage):
                 f"a[href^='/brand_products/{brand}']").click(),
             success_condition=lambda: self.page.wait_for_url(f"**{brand}**", timeout=5000)
         )
+
     def expand_women_category(self):
         self.dismiss_vignette_and_retry(
             action=lambda: self.women_category.click(),
             success_condition=lambda: self.page.wait_for_selector("#Women.in", state="attached")
         )
-
 
     def expand_men_category(self):
         self.dismiss_vignette_and_retry(
@@ -101,4 +114,14 @@ class HomePage(BasePage):
         self.dismiss_vignette_and_retry(
             action=lambda: self.kids_category.click(),
             success_condition=lambda: self.page.wait_for_selector("#Kids.in", state="attached")
+        )
+
+    def subscribe(self, email):
+        self.subscribe_email_field.fill(email)
+        self.subscribe_button.click()
+
+    def click_here_products(self):
+        self.dismiss_vignette_and_retry(
+            action=lambda: self.click_here_products_button.click(),
+            success_condition=lambda: self.page.wait_for_url("**/products**", timeout=5000)
         )

@@ -52,9 +52,10 @@ class BasePage:
         self.click(self.NAV_API_TESTING)
 
     def click_nav_video_tutorials(self):
-        with self.page.context.expect_page() as new_page_info:
-            self.click(self.NAV_VIDEO_TUTORIALS)
-        return new_page_info.value
+        self.dismiss_vignette_and_retry(
+            action=lambda: self.click(self.NAV_VIDEO_TUTORIALS),
+            success_condition=lambda: self.page.wait_for_url("**/youtube.com/**", timeout=10000)
+        )
 
     def click_nav_contact_us(self):
         self.click(self.NAV_CONTACT_US)
@@ -65,13 +66,13 @@ class BasePage:
             try:
                 # clear any existing vignette before attempting
                 if "#google_vignette" in self.page.url:
-                    self.page.evaluate("window.location.hash = ''")
+                    self.page.evaluate("window.history.replaceState(null, '', window.location.pathname + window.location.search)")
                     self.page.wait_for_load_state("domcontentloaded")
                 action()
                 success_condition()
                 break
             except:
                 if "#google_vignette" in self.page.url:
-                    self.page.evaluate("window.location.hash = ''")
+                    self.page.evaluate("window.history.replaceState(null, '', window.location.pathname + window.location.search)")
                     self.page.wait_for_load_state("domcontentloaded")
 

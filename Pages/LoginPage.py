@@ -14,6 +14,7 @@ class LoginPage(BasePage):
 
     def navigate_to_login_page(self):
         self.navigate("/login")
+        self.login_email_input.wait_for()
 
     def login(self, email: str, password: str):
 

@@ -12,6 +12,7 @@ class ContactUsPage(BasePage):
         self.submit_button = page.get_by_role("button", name = "Submit")
 
 
+
     def navigate_to_contactus_page(self):
         self.navigate("/contact_us")
 

@@ -122,6 +122,7 @@ def cart_page_logged_in(page: Page, home_page, existing_user: dict):
     login_page = LoginPage(page)
     login_page.navigate_to_login_page()
     login_page.login(email=existing_user["email"], password=existing_user["password"])
+    home_page.navigate("/")
 
     cart_page = CartPage(page)
 

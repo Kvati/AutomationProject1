@@ -8,24 +8,55 @@ def test_homepage(home_page):
     expect(home_page.brands_title_text).to_be_visible()
     expect(home_page.category_title_text).to_be_visible()
 
-def test_category_filtering_women(home_page):
+def test_category_filter_visibility_women(home_page):
     home_page.expand_women_category()
 
     expect(home_page.women_category_tops).to_be_visible()
     expect(home_page.women_category_dress).to_be_visible()
     expect(home_page.women_category_saree).to_be_visible()
 
-def test_category_filtering_men(home_page):
+def test_category_filtering_women(home_page):
+    home_page.expand_women_category()
+    home_page.women_category_tops.click()
+    expect(home_page.women_category_tops_title).to_be_visible()
+
+    home_page.expand_women_category()
+    home_page.women_category_dress.click()
+    expect(home_page.women_category_dress_title).to_be_visible()
+
+    home_page.expand_women_category()
+    home_page.women_category_saree.click()
+    expect(home_page.women_category_saree_title).to_be_visible()
+
+def test_category_filter_visibility_men(home_page):
     home_page.expand_men_category()
 
     expect(home_page.men_category_jeans).to_be_visible()
     expect(home_page.men_category_t_shirts).to_be_visible()
 
-def test_category_filtering_kids(home_page):
+def test_category_filtering_men(home_page):
+    home_page.expand_men_category()
+    home_page.men_category_jeans.click()
+    expect(home_page.men_category_jeans_title).to_be_visible()
+
+    home_page.expand_men_category()
+    home_page.men_category_t_shirts.click()
+    expect(home_page.men_category_t_shirts_title).to_be_visible()
+
+def test_category_filter_visibility_kids(home_page):
     home_page.expand_kids_category()
 
     expect(home_page.kids_category_dress).to_be_visible()
     expect(home_page.kids_category_tops_and_shirts).to_be_visible()
+
+def test_category_filtering_kids(home_page):
+    home_page.expand_kids_category()
+    home_page.kids_category_dress.click()
+    expect(home_page.kids_category_dress_title).to_be_visible()
+
+    home_page.expand_kids_category()
+    home_page.kids_category_tops_and_shirts.click()
+    expect(home_page.kids_category_tops_and_shirts_title).to_be_visible()
 
 @pytest.mark.parametrize("brand, url", [
     ("Polo", "/brand_products/Polo"),
@@ -90,3 +121,8 @@ def test_unsuccessful_subscribe(home_page):
 
     is_invalid = home_page.subscribe_email_field.evaluate("el => !el.validity.valid")
     assert is_invalid
+
+def test_nav_video_tutorials_redirects_to_youtube(home_page):
+    home_page.click_nav_video_tutorials()
+
+    assert "youtube.com" in home_page.page.url

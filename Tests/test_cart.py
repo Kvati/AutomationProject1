@@ -1,16 +1,9 @@
 from playwright.sync_api import expect
+from Utils.user_test_data import VALID_CARD
 import random
 import pytest
 import re
 import allure
-
-VALID_CARD = {
-    "name": "JohnDoe",
-    "number": "1234 5678 9012 3456",
-    "cvc": "123",
-    "month": "12",
-    "year": "2026"
-}
 
 def test_empty_cart_page(home_page):
     home_page.navigate("/view_cart")
@@ -76,6 +69,27 @@ def test_checkout_address_fields(cart_page_logged_in, existing_user):
     cart_page.verify_billing_address(existing_user)
     cart_page.verify_delivery_address(existing_user)
 
+def test_checkout_comment_field_visible(cart_page_logged_in):
+    cart_page, item_count = cart_page_logged_in
+
+    cart_page.proceed_to_checkout_navigation()
+
+    expect(cart_page.text_comment_frame).to_be_visible()
+
+def test_place_order_without_comment(cart_page_logged_in):
+    cart_page, item_count = cart_page_logged_in
+
+    cart_page.proceed_to_checkout_navigation()
+    cart_page.place_order_button.click()
+
+    expect(cart_page.page).to_have_url("https://automationexercise.com/payment")
+
+    cart_page.fill_card_details(VALID_CARD)
+    cart_page.pay_and_confirm_order.click()
+
+    expect(cart_page.page).to_have_url(re.compile(r"https://automationexercise\.com/payment_done/\d+"))
+    expect(cart_page.order_placed).to_be_visible()
+
 def test_place_order_full_card(cart_page_logged_in):
     cart_page, item_count = cart_page_logged_in
 
@@ -85,15 +99,7 @@ def test_place_order_full_card(cart_page_logged_in):
 
     expect(cart_page.page).to_have_url("https://automationexercise.com/payment")
 
-    card_details = {
-        "name": "JohnDoe123",
-        "number": "1234 5678 9012 3456",
-        "cvc": "123",
-        "month": "12",
-        "year": "2026"
-    }
-
-    cart_page.fill_card_details(card_details)
+    cart_page.fill_card_details(VALID_CARD)
     cart_page.pay_and_confirm_order.click()
 
     expect(cart_page.page).to_have_url(re.compile(r"https://automationexercise\.com/payment_done/\d+"))

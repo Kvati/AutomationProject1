@@ -17,6 +17,7 @@ class ProductDetailsPage(ProductsPage):
         self.review_form_email = page.get_by_placeholder("Email Address").nth(0)
         self.review_form_text = page.get_by_placeholder("Add Review Here!")
         self.submit_review_button = page.get_by_role("button", name="Submit")
+        self.successful_review = page.get_by_text("Thank you for your review.")
         self.product_availability = page.locator("p:has(b:text('Availability:'))")
         self.product_condition = page.locator("p:has(b:text('Condition:'))")
         self.product_brand = page.locator("p:has(b:text('Brand:'))")

@@ -63,6 +63,13 @@ VALID_USER = {
     "email": "test@test.com",
     "review": "test"
 }
+def test_valid_review(product_details_page):
+    product_page, product = product_details_page
+
+    product_page.fill_review_form(VALID_USER)
+
+    expect(product_page.successful_review).to_be_visible()
+
 @pytest.mark.parametrize("field, inputs", [
     pytest.param("name", {**VALID_USER, "name": ""}, id="name_empty"),
     pytest.param("email", {**VALID_USER, "email": ""}, id="email_empty"),

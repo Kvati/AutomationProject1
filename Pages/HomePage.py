@@ -20,16 +20,23 @@ class HomePage(BasePage):
         self.women_category_tops = page.locator("#Women").get_by_role("link", name="Tops")
         self.women_category_saree = page.locator("#Women").get_by_role("link", name="Saree")
         self.women_category_dress = page.locator("#Women").get_by_role("link", name="Dress")
+        self.women_category_tops_title = page.get_by_text("Women - Tops Products")
+        self.women_category_saree_title = page.get_by_text("Women - Saree Products")
+        self.women_category_dress_title = page.get_by_text("Women - Dress Products")
 
         #Men category locators
         self.men_category = page.locator("a[href='#Men']")
         self.men_category_t_shirts = page.locator("#Men").get_by_role("link", name="TShirts")
         self.men_category_jeans = page.locator("#Men").get_by_role("link", name="Jeans")
+        self.men_category_t_shirts_title = page.get_by_text("Men - Tshirts Products")
+        self.men_category_jeans_title = page.get_by_text("Men - Jeans Products")
 
         #Kids category locators
         self.kids_category = page.locator("a[href='#Kids']")
         self.kids_category_dress = page.locator("#Kids").get_by_role("link", name="Dress")
         self.kids_category_tops_and_shirts = page.locator("#Kids").get_by_role("link", name="Tops & Shirts")
+        self.kids_category_dress_title = page.get_by_text("Kids - Dress Products")
+        self.kids_category_tops_and_shirts_title = page.get_by_text("Kids - Tops & Shirts Products")
 
         self.products = page.locator(".productinfo")
         self.product_to_view = page.locator("a[href^='/product_details/']")

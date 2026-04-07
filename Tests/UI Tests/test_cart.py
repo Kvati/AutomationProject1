@@ -1,5 +1,5 @@
 from playwright.sync_api import expect
-from Utils.user_test_data import VALID_CARD
+from TestData.user_test_data import VALID_CARD
 import random
 import pytest
 import re

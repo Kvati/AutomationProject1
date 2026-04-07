@@ -98,29 +98,28 @@ class HomePage(BasePage):
         }
 
     def click_brand(self, brand: str):
+        brand_link = self.page.locator(f"a[href^='/brand_products/{brand}']")
         self.dismiss_vignette_and_retry(
-            action=lambda: self.page.locator(
-                f"a[href^='/brand_products/{brand}']").scroll_into_view_if_needed() or self.page.locator(
-                f"a[href^='/brand_products/{brand}']").click(),
-            success_condition=lambda: self.page.wait_for_url(f"**{brand}**", timeout=5000)
+            action=lambda: (brand_link.scroll_into_view_if_needed(), brand_link.click()),
+            success_condition=lambda: self.page.wait_for_url("**/brand_products/**", timeout=5000)
         )
 
     def expand_women_category(self):
         self.dismiss_vignette_and_retry(
-            action=lambda: self.women_category.click(),
-            success_condition=lambda: self.page.wait_for_selector("#Women.in", state="attached")
+            action=lambda: None if self.page.locator("#Women.in").count() else self.women_category.click(),
+            success_condition=lambda: self.page.wait_for_selector("#Women a[href*='/category_products']", state="visible", timeout=10000)
         )
 
     def expand_men_category(self):
         self.dismiss_vignette_and_retry(
-            action=lambda: self.men_category.click(),
-            success_condition=lambda: self.page.wait_for_selector("#Men.in", state="attached")
+            action=lambda: None if self.page.locator("#Men.in").count() else (self.men_category.scroll_into_view_if_needed(), self.men_category.click()),
+            success_condition=lambda: self.page.wait_for_selector("#Men a[href*='/category_products']", state="visible", timeout=10000)
         )
 
     def expand_kids_category(self):
         self.dismiss_vignette_and_retry(
-            action=lambda: self.kids_category.click(),
-            success_condition=lambda: self.page.wait_for_selector("#Kids.in", state="attached")
+            action=lambda: None if self.page.locator("#Kids.in").count() else (self.kids_category.scroll_into_view_if_needed(), self.kids_category.click()),
+            success_condition=lambda: self.page.wait_for_selector("#Kids a[href*='/category_products']", state="visible", timeout=10000)
         )
 
     def subscribe(self, email):
@@ -129,6 +128,6 @@ class HomePage(BasePage):
 
     def click_here_products(self):
         self.dismiss_vignette_and_retry(
-            action=lambda: self.click_here_products_button.click(),
+            action=lambda: (self.click_here_products_button.scroll_into_view_if_needed(), self.click_here_products_button.click()),
             success_condition=lambda: self.page.wait_for_url("**/products**", timeout=5000)
         )

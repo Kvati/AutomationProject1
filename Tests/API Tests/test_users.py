@@ -57,7 +57,7 @@ def test_delete_user(api_session, base_url, register_user):
 
     assert response_setup.status_code == 200
     body_setup = response_setup.json()
-    assert body_setup["responseCode"] == 200
+    assert body_setup["responseCode"] == 201
 
     response = api_session.delete(f"{base_url}/api/deleteAccount", data={"email": email, "password": register_user["password"]})
 
@@ -82,7 +82,7 @@ def test_update_user_information(api_session, base_url, register_user):
 
     assert response_setup.status_code == 200
     body_setup = response_setup.json()
-    assert body_setup["responseCode"] == 200
+    assert body_setup["responseCode"] == 201
 
     response = api_session.put(f"{base_url}/api/updateAccount", data={"name": register_user["username"],
     "password": register_user["password"], "email": register_user["email"],
@@ -100,7 +100,7 @@ def test_update_user_information(api_session, base_url, register_user):
     assert body["message"] == "User updated!"
 
     verify = api_session.get(f"{base_url}/api/getUserDetailByEmail", params={"email": register_user["email"]})
-    assert verify.json["user"]["lastname"] == "new_last_name"
+    assert verify.json()["user"]["last_name"] == "new_last_name"
 
     api_session.delete(f"{base_url}/api/deleteAccount", data={"email": register_user["email"],"password": register_user["password"]})
 

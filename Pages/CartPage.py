@@ -61,6 +61,7 @@ class CartPage(BasePage):
 
     def proceed_to_checkout_navigation(self):
         self.proceed_to_checkout.click()
+        self.page.wait_for_load_state("domcontentloaded")
 
     def register_login_button_navigation(self):
         self.register_login_button_during_checkout.click()

@@ -77,7 +77,7 @@ def test_view_random_product(home_page):
     random_product_vars = home_page.view_random_product()
 
     expect(home_page.page.get_by_text(random_product_vars["name"]).first).to_be_visible()
-    expect(home_page.page.get_by_text(random_product_vars["price"])).to_be_visible()
+    expect(home_page.page.get_by_text(random_product_vars["price"]).first).to_be_visible()
 
 def test_add_random_product_to_cart_view_cart(home_page):
     random_product_vars = home_page.add_random_product_to_cart()

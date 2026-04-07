@@ -17,6 +17,7 @@ class ProductsPage(HomePage):
 
     def navigate_to_products_page(self):
         self.navigate("/products")
+        self.search_input.wait_for()
 
     def search_random_product(self):
         count = self.products.count()

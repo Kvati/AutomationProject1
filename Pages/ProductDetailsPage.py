@@ -41,6 +41,7 @@ class ProductDetailsPage(ProductsPage):
         return self.product_brand.text_content().replace("Brand:", "").strip()
 
     def fill_review_form(self, inputs: dict):
+        self.review_form_name.scroll_into_view_if_needed()
         self.review_form_name.fill(inputs["name"])
         self.review_form_email.fill(inputs["email"])
         self.review_form_text.fill(inputs["review"])

@@ -1,6 +1,7 @@
 import pytest
 import uuid
 import random
+import re
 from Pages.ContactUsPage import ContactUsPage
 from Pages.HomePage import HomePage
 from Pages.LoginPage import LoginPage
@@ -37,6 +38,27 @@ def existing_user():
         "first_name": "Kvati",
         "last_name": "Test",
         "company": "TestCompany",
+        "address_1": "TestAddress 123 bld. 15",
+        "address_2": "TestAddress 456 bld. 43",
+        "country": "Australia",
+        "state": "TestState",
+        "city": "TestCity",
+        "zipcode": "TestZIP",
+        "mobile_number": "0412 345 678"
+    }
+
+@pytest.fixture
+def register_user(random_user):
+    return {
+        "username": random_user["username"],
+        "email": random_user["email"],
+        "password": "test123",
+        "dob_day": "20",
+        "dob_month": "9",
+        "dob_year": "2000",
+        "first_name": "test_first_name",
+        "last_name": "test_last_name",
+        "company": "TestCompany1",
         "address_1": "TestAddress 123 bld. 15",
         "address_2": "TestAddress 456 bld. 43",
         "country": "Australia",
@@ -115,6 +137,8 @@ def product_details_page(page: Page):
     product_details_page = ProductDetailsPage(page)
     product_details_page.navigate("/products")
     random_product_vars = product_details_page.view_random_product()
+    page.wait_for_url(re.compile(r"https://automationexercise\.com/product_details/\d+"), timeout=30000)
+    page.locator(".product-information h2").wait_for()
     return product_details_page, random_product_vars
 
 @pytest.fixture

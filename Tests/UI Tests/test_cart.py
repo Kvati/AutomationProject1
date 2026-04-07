@@ -80,6 +80,7 @@ def test_place_order_without_comment(cart_page_logged_in):
     cart_page, item_count = cart_page_logged_in
 
     cart_page.proceed_to_checkout_navigation()
+    cart_page.place_order_button.scroll_into_view_if_needed()
     cart_page.place_order_button.click()
 
     expect(cart_page.page).to_have_url("https://automationexercise.com/payment")

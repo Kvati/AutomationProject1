@@ -3,3 +3,4 @@ playwright
 pytest-playwright
 allure-pytest
 requests
+pytest-rerunfailures

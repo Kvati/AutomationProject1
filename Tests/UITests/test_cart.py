@@ -101,7 +101,7 @@ def test_place_order_without_comment(cart_page_logged_in):
     expect(cart_page.order_placed).to_be_visible()
 
 @pytest.mark.smoke
-def test_place_order_full_card(cart_page_logged_in):
+def test_place_order_full_card(cart_page_logged_in, browser_name):
     cart_page, item_count = cart_page_logged_in
 
     cart_page.proceed_to_checkout_navigation()
@@ -115,6 +115,9 @@ def test_place_order_full_card(cart_page_logged_in):
 
     expect(cart_page.page).to_have_url(re.compile(r"https://automationexercise\.com/payment_done/\d+"))
     expect(cart_page.order_placed).to_be_visible()
+
+    if browser_name == "webkit":
+        pytest.skip("WebKit does not support file downloads in this environment")
 
     download = cart_page.download_invoice()
     assert download.suggested_filename != ""

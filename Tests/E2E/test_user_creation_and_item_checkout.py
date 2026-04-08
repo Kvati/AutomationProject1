@@ -13,7 +13,7 @@ card_details = {
 }
 
 @pytest.mark.smoke
-def test_user_creation_and_item_checkout(cart_page_new_user):
+def test_user_creation_and_item_checkout(cart_page_new_user, browser_name):
     cart_page, product_count, user = cart_page_new_user
 
     cart_page.proceed_to_checkout_navigation()
@@ -32,11 +32,14 @@ def test_user_creation_and_item_checkout(cart_page_new_user):
     expect(cart_page.page).to_have_url(re.compile(r"https://automationexercise\.com/payment_done/\d+"))
     expect(cart_page.order_placed).to_be_visible()
 
+    if browser_name == "webkit":
+        pytest.skip("WebKit does not support file downloads in this environment")
+
     download = cart_page.download_invoice()
     assert download.suggested_filename != ""
 
 @pytest.mark.regression
-def test_checkout_register_new_user_during_checkout(cart_page_not_logged_in, register_user, page: Page):
+def test_checkout_register_new_user_during_checkout(cart_page_not_logged_in, register_user, page: Page, browser_name):
     checkout_page, item_count = cart_page_not_logged_in
 
     checkout_page.proceed_to_checkout_navigation()
@@ -66,6 +69,9 @@ def test_checkout_register_new_user_during_checkout(cart_page_not_logged_in, reg
 
     expect(checkout_page.page).to_have_url(re.compile(r"https://automationexercise\.com/payment_done/\d+"))
     expect(checkout_page.order_placed).to_be_visible()
+
+    if browser_name == "webkit":
+        pytest.skip("WebKit does not support file downloads in this environment")
 
     download = checkout_page.download_invoice()
     assert download.suggested_filename != ""

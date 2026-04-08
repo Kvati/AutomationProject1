@@ -62,6 +62,7 @@ class BasePage:
 
     def dismiss_vignette_and_retry(self, action, success_condition):
         max_retries = 3
+        last_exception = None
         for attempt in range(max_retries):
             try:
                 # clear any existing vignette before attempting
@@ -70,9 +71,11 @@ class BasePage:
                     self.page.wait_for_load_state("domcontentloaded")
                 action()
                 success_condition()
-                break
-            except:
+                return
+            except Exception as e:
+                last_exception = e
                 if "#google_vignette" in self.page.url:
                     self.page.evaluate("window.history.replaceState(null, '', window.location.pathname + window.location.search)")
                     self.page.wait_for_load_state("domcontentloaded")
+        raise last_exception
 

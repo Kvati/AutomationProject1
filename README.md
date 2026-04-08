@@ -23,7 +23,7 @@ project/
 │   ├── CartPage.py
 │   └── ContactUsPage.py
 ├── Tests/
-│   ├── UI Tests/               # UI tests using Playwright
+│   ├── UITests/               # UI tests using Playwright
 │   │   ├── test_login.py
 │   │   ├── test_signup.py
 │   │   ├── test_register.py
@@ -34,7 +34,7 @@ project/
 │   │   ├── test_contactus.py
 │   │   ├── test_testcases.py
 │   │   └── conftest.py
-│   ├── API Tests/              # API tests using Requests
+│   ├── APITests/              # API tests using Requests
 │   │   ├── test_products.py
 │   │   ├── test_auth.py
 │   │   ├── test_users.py
@@ -42,8 +42,9 @@ project/
 │   └── E2E/                   # End-to-end tests
 │       ├── test_user_lifecycle.py
 │       └── test_user_creation_and_item_checkout.py
+├── TestData/
+│   └── user_test_data.py       # Shared test data
 ├── Utils/
-│   ├── user_test_data.py       # Shared test data
 │   └── upload_test_file.txt    # File used in Contact Us upload tests
 ├── conftest.py                 # Root fixtures and hooks
 ├── pytest.ini                  # Pytest configuration
@@ -67,6 +68,20 @@ project/
    python -m playwright install
    ```
 
+## 🐳 Docker
+
+Run the full test suite in a container — no local Python or browser installation needed:
+```
+docker compose up
+```
+
+Run with a specific marker:
+```
+docker compose run tests pytest -m smoke -v
+```
+
+Allure results are written to `./allure-results` on your host machine via a volume mount.
+
 ## ▶️ Running Tests
 
 Run all tests:
@@ -76,12 +91,12 @@ pytest -v
 
 Run only UI tests:
 ```
-pytest "Tests/UI Tests" -v
+pytest "Tests/UITests" -v
 ```
 
 Run only API tests:
 ```
-pytest "Tests/API Tests" -v
+pytest "Tests/APITests" -v
 ```
 
 Run only E2E tests:
@@ -91,7 +106,7 @@ pytest Tests/E2E -v
 
 Run a specific test file:
 ```
-pytest "Tests/UI Tests/test_cart.py" -v
+pytest "Tests/UITests/test_cart.py" -v
 ```
 
 Run only previously failed tests:
@@ -105,12 +120,30 @@ pytest -v --alluredir=allure-results
 allure serve allure-results
 ```
 
+## 🏷️ Test Markers
+
+Every test is tagged with one of two markers:
+
+| Marker | Purpose |
+| --- | --- |
+| `smoke` | Critical-path tests — one per module, fast sanity check |
+| `regression` | Edge cases, negative paths, parametrized validations |
+
+Run by marker:
+```
+pytest -m smoke -v
+pytest -m regression -v
+pytest -m "smoke or regression" -v
+```
+
+Markers are purely additive — all path/file/folder based run commands work exactly the same without `-m`.
+
 ## 📊 Test Report
 Live Allure report: https://kvati.github.io/AutomationProject1/
 
 ## ✅ Test Coverage
 
-### UI Tests
+### UITests
 | Module | Test File | Scenarios |
 | --- | --- | --- |
 | Login | `test_login.py` | Valid login, invalid credentials, empty fields, logout |
@@ -123,12 +156,12 @@ Live Allure report: https://kvati.github.io/AutomationProject1/
 | Contact Us | `test_contactus.py` | Page load, valid form submission, dialog cancel, invalid/empty fields |
 | Test Cases Page | `test_testcases.py` | Page load and content visibility |
 
-### API Tests
+### APITests
 | Module | Test File | Scenarios |
 | --- | --- | --- |
-| Products | `API Tests/test_products.py` | Get all products, get all brands, search product, unsupported methods, missing parameters, no results |
-| Auth | `API Tests/test_auth.py` | Valid login, invalid credentials, missing email/password, unsupported method |
-| Users | `API Tests/test_users.py` | Create user, create with missing fields (xfail), delete user, update user, get user by email, invalid/missing email, duplicate user |
+| Products | `APITests/test_api_products.py` | Get all products, get all brands, search product, unsupported methods, missing parameters, no results |
+| Auth | `APITests/test_auth.py` | Valid login, invalid credentials, missing email/password, unsupported method |
+| Users | `APITests/test_users.py` | Create user, create with missing fields (xfail), delete user, update user, get user by email, invalid/missing email, duplicate user |
 
 ### E2E Tests
 | Module | Test File | Scenarios |

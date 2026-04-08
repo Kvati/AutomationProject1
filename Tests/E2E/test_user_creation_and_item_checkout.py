@@ -1,3 +1,4 @@
+import pytest
 from playwright.sync_api import expect, Page
 from Pages.SignupPage import SignUpPage
 from Pages.RegisterPage import RegisterPage
@@ -11,6 +12,7 @@ card_details = {
     "year": "2026"
 }
 
+@pytest.mark.smoke
 def test_user_creation_and_item_checkout(cart_page_new_user):
     cart_page, product_count, user = cart_page_new_user
 
@@ -33,6 +35,7 @@ def test_user_creation_and_item_checkout(cart_page_new_user):
     download = cart_page.download_invoice()
     assert download.suggested_filename != ""
 
+@pytest.mark.regression
 def test_checkout_register_new_user_during_checkout(cart_page_not_logged_in, register_user, page: Page):
     checkout_page, item_count = cart_page_not_logged_in
 

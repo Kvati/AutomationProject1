@@ -1,7 +1,9 @@
+import pytest
 from playwright.sync_api import expect, Page
 from Pages.LoginPage import LoginPage
 
 
+@pytest.mark.regression
 def test_register_and_delete_user(register_page, register_user: dict, page: Page):
     register_page.account_creation(register_user)
 

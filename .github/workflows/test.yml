@@ -1,6 +1,6 @@
 name: Tests
 
-on: [push]
+on: [push, pull_request]
 
 permissions:
   contents: write
@@ -14,21 +14,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
+      - name: Build Docker image
+        run: docker build -t test-suite .
 
-      - name: Install dependencies
+      - name: Run tests in Docker
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Ensure browsers are installed
-        run: python -m playwright install --with-deps
-
-      - name: Run tests
-        run: pytest -v --alluredir=allure-results
+          docker run --rm \
+            -v ${{ github.workspace }}/allure-results:/app/allure-results \
+            test-suite \
+            pytest -v --alluredir=allure-results --browser chromium --browser firefox --browser webkit
         continue-on-error: true
 
       - name: Load Allure report action

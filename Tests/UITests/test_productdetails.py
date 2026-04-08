@@ -4,12 +4,14 @@ import re
 import allure
 
 
+@pytest.mark.smoke
 def test_product_details_page(product_details_page):
     product_page, product = product_details_page
 
     expect(product_page.page).to_have_url(re.compile(r"https://automationexercise.com/product_details/\d+"))
 
 
+@pytest.mark.regression
 def test_chosen_product_data(product_details_page):
     product_page, product = product_details_page
 
@@ -17,6 +19,7 @@ def test_chosen_product_data(product_details_page):
     assert product_page.check_condition(product_page.get_condition_status())
     assert product_page.check_brand(product_page.get_brand_name())
 
+@pytest.mark.regression
 @pytest.mark.parametrize("qty",[
     pytest.param("3", id = "3 items"),
     pytest.param("5", id = "5 items"),
@@ -43,6 +46,7 @@ def test_valid_add_to_cart(product_details_page, qty):
     assert product_price == product_price_single_cart
     assert product_price * int(qty) == product_price_cart
 
+@pytest.mark.regression
 @allure.issue("JIRA-123", "Quantity cannot handle invalid inputs")
 @pytest.mark.parametrize("qty",[
     pytest.param("-1", id = "negative", marks=pytest.mark.xfail(reason="Known issue: Quantity cannot handle invalid inputs - JIRA-123")),
@@ -63,6 +67,7 @@ VALID_USER = {
     "email": "test@test.com",
     "review": "test"
 }
+@pytest.mark.regression
 def test_valid_review(product_details_page):
     product_page, product = product_details_page
 
@@ -70,6 +75,7 @@ def test_valid_review(product_details_page):
 
     expect(product_page.successful_review).to_be_visible()
 
+@pytest.mark.regression
 @pytest.mark.parametrize("field, inputs", [
     pytest.param("name", {**VALID_USER, "name": ""}, id="name_empty"),
     pytest.param("email", {**VALID_USER, "email": ""}, id="email_empty"),

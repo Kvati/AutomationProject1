@@ -1,10 +1,13 @@
+import pytest
 from playwright.sync_api import Page,expect
 
 
+@pytest.mark.regression
 def test_register_page(register_page,register_user: dict):
 
     expect(register_page.page.get_by_text("ENTER ACCOUNT INFORMATION")).to_be_visible()
 
+@pytest.mark.smoke
 def test_valid_user_register(register_page, register_user: dict):
     register_page.account_creation(register_user)
 
@@ -12,12 +15,14 @@ def test_valid_user_register(register_page, register_user: dict):
     expect(register_page.page.get_by_text("ACCOUNT CREATED!")).to_be_visible()
 
 
+@pytest.mark.regression
 def test_full_empty_user_register(register_page, empty_user: dict):
     register_page.account_creation(empty_user)
 
     is_invalid = register_page.password.evaluate("el => !el.validity.valid")
     assert is_invalid
 
+@pytest.mark.regression
 def test_one_field_empty_user_register(register_page, one_req_field_missing_user: dict):
     register_page.account_creation(one_req_field_missing_user)
 

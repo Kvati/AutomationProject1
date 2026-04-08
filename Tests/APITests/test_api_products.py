@@ -1,4 +1,6 @@
+import pytest
 
+@pytest.mark.smoke
 def test_get_all_products(api_session, base_url):
     response = api_session.get(f"{base_url}/api/productsList")
 
@@ -21,6 +23,7 @@ def test_get_all_products(api_session, base_url):
         assert product["name"].strip() != ""
 
 
+@pytest.mark.regression
 def test_post_product_unsupported(api_session, base_url):
     response = api_session.post(f"{base_url}/api/productsList")
 
@@ -28,6 +31,7 @@ def test_post_product_unsupported(api_session, base_url):
     body = response.json()
     assert body["responseCode"] == 405
 
+@pytest.mark.smoke
 def test_get_all_brands(api_session, base_url):
     response = api_session.get(f"{base_url}/api/brandsList")
     expected_brands = {"Polo", "H&M", "Madame", "Mast & Harbour", "Babyhug", "Allen Solly Junior", "Kookie Kids", "Biba"}
@@ -49,6 +53,7 @@ def test_get_all_brands(api_session, base_url):
         assert brand["id"] > 0
         assert brand["brand"].strip() != ""
 
+@pytest.mark.regression
 def test_put_all_brands_unsupported(api_session, base_url):
     response = api_session.put(f"{base_url}/api/brandsList")
 
@@ -56,6 +61,7 @@ def test_put_all_brands_unsupported(api_session, base_url):
     body = response.json()
     assert body["responseCode"] == 405
 
+@pytest.mark.regression
 def test_search_for_product(api_session, base_url):
     search_query = "jean"
 
@@ -69,6 +75,7 @@ def test_search_for_product(api_session, base_url):
     for product in body["products"]:
         assert search_query.lower() in product["name"].lower()
 
+@pytest.mark.regression
 def test_search_without_search_parameter(api_session, base_url):
     response = api_session.post(f"{base_url}/api/searchProduct")
 
@@ -76,6 +83,7 @@ def test_search_without_search_parameter(api_session, base_url):
     body = response.json()
     assert body["responseCode"] == 400
 
+@pytest.mark.regression
 def test_search_no_result(api_session, base_url):
     search_query = "somejibberish"
 

@@ -3,6 +3,7 @@ import pytest
 # the fixture register_user creates a random email, which I need for deletion so for the sake of sending a
 # parameter I save email in a separate static variable
 
+@pytest.mark.smoke
 def test_create_user(api_session, base_url, register_user):
     email = register_user["email"]
 
@@ -23,6 +24,7 @@ def test_create_user(api_session, base_url, register_user):
 
     api_session.delete(f"{base_url}/api/deleteAccount", data={"email": register_user["email"],"password": register_user["password"]})
 
+@pytest.mark.regression
 @pytest.mark.xfail(reason="Known issue: API does not validate fields JIRA-123")
 def test_create_user_with_missing_field(api_session, base_url, register_user):
 
@@ -42,6 +44,7 @@ def test_create_user_with_missing_field(api_session, base_url, register_user):
 
     api_session.delete(f"{base_url}/api/deleteAccount", data={"email": register_user["email"], "password": register_user["password"]})
 
+@pytest.mark.regression
 def test_delete_user(api_session, base_url, register_user):
     email = register_user["email"]
 
@@ -66,6 +69,7 @@ def test_delete_user(api_session, base_url, register_user):
     assert body["responseCode"] == 200
     assert body["message"] == "Account deleted!"
 
+@pytest.mark.regression
 def test_update_user_information(api_session, base_url, register_user):
     name = register_user["username"]
     email = register_user["email"]
@@ -104,6 +108,7 @@ def test_update_user_information(api_session, base_url, register_user):
 
     api_session.delete(f"{base_url}/api/deleteAccount", data={"email": register_user["email"],"password": register_user["password"]})
 
+@pytest.mark.smoke
 def test_get_user_account_detail_by_email(api_session, base_url, existing_user):
     response = api_session.get(f"{base_url}/api/getUserDetailByEmail", params = {"email": existing_user["email"]})
 
@@ -113,6 +118,7 @@ def test_get_user_account_detail_by_email(api_session, base_url, existing_user):
     assert body["user"]["name"] == existing_user["username"]
     assert body["user"]["email"] == existing_user["email"]
 
+@pytest.mark.regression
 def test_get_user_account_detail_by_invalid_email(api_session,base_url):
     response = api_session.get(f"{base_url}/api/getUserDetailByEmail", params={"email": "random123email@123emailtest.com"})
 
@@ -121,6 +127,7 @@ def test_get_user_account_detail_by_invalid_email(api_session,base_url):
     assert body["responseCode"] == 404
     assert body["message"] == "Account not found with this email, try another email!"
 
+@pytest.mark.regression
 def test_get_user_account_detail_by_no_email(api_session,base_url):
     response = api_session.get(f"{base_url}/api/getUserDetailByEmail")
 
@@ -129,6 +136,7 @@ def test_get_user_account_detail_by_no_email(api_session,base_url):
     assert body["responseCode"] == 400
     assert body["message"] == "Bad request, email parameter is missing in GET request."
 
+@pytest.mark.regression
 def test_create_duplicate_user(api_session, base_url, existing_user):
 
     response = api_session.post(f"{base_url}/api/createAccount", data = {"name": existing_user["username"],
